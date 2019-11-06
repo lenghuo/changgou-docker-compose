@@ -1,0 +1,84 @@
+version: '2'
+services:
+  elasticsearch:
+    image: elasticsearch:5.6.8
+    container_name: elasticsearch
+#    restart : always 表示该容器重启自动运行
+#    restart: always
+    environment:
+      - "cluster.name=my-elasticsearch"
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 1g
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+      - ./config:/usr/share/elasticsearch/config:rw
+      - ./plugins:/usr/share/elasticsearch/plugins
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+  kibana:
+    image: kibana:5.6.8
+#    restart: always
+    container_name: kibana
+    ports:
+      - 5601:5601
+    networks:
+      - esnet
+  mysql:
+    image: mysql:5.7
+    restart: always
+    container_name: mysql57
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_config:/etc/mysql/conf.d
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8
+      --collation-server=utf8_general_ci
+    ports:
+      - 33061:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=root
+  redis:
+    image: redis:latest
+#    restart: always
+    container_name: redis
+    ports:
+      - 6379:6379
+#  不知道下面的这个怎么使用，所以先注销掉
+#  canal:
+#    image: canal/canal-server:latest
+#    container_name: canal
+#    restart: always
+#    links:
+#      - mysql
+#    environment:
+#      - canal.instance.master.address=mysql:3306
+#      - canal.instance.dbUsername=root
+#      - canal.instance.connectionCharset=UTF-8
+#      - canal.instance.tsdb.enable=true
+#      - canal.instance.gtidon=false
+#      - canal.instance.filter.regex=.*\\..*
+#    ports:
+#      - 11111:11111
+volumes:
+  esdata:
+    driver: local
+  mysql_data:
+    driver: local
+  mysql_config:
+    driver: local
+networks:
+  esnet:
