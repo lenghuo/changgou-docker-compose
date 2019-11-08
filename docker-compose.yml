@@ -37,7 +37,7 @@ services:
       - esnet
   mysql:
     image: mysql:5.7
-    restart: always
+#    restart: always
     container_name: mysql57
     volumes:
       - mysql_data:/var/lib/mysql
@@ -57,6 +57,29 @@ services:
     container_name: redis
     ports:
       - 6379:6379
+  rabbitmq:
+    image: rabbitmq:3.8.0-management
+    container_name: rabbitmq
+#    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  tracker:
+    image: morunchang/fastdfs:latest
+    container_name: tracker
+    network_mode: "host"
+    command: "sh tracker.sh"
+  storage:
+    image: morunchang/fastdfs:latest
+    container_name: storage
+    network_mode: "host"
+    environment:
+      - TRACKER_IP=192.168.99.121:22122
+      - GROUP_NAME=storage1
+    command: "sh storage.sh"
 #  不知道下面的这个怎么使用，所以先注销掉
 #  canal:
 #    image: canal/canal-server:latest
