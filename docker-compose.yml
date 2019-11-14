@@ -41,7 +41,7 @@ services:
     container_name: mysql57
     volumes:
       - mysql_data:/var/lib/mysql
-      - mysql_config:/etc/mysql/conf.d
+      - mysql_conf:/etc/mysql/mysql.conf.d
     command:
       --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8
@@ -80,28 +80,39 @@ services:
       - TRACKER_IP=192.168.99.121:22122
       - GROUP_NAME=storage1
     command: "sh storage.sh"
-#  不知道下面的这个怎么使用，所以先注销掉
-#  canal:
-#    image: canal/canal-server:latest
-#    container_name: canal
-#    restart: always
-#    links:
-#      - mysql
-#    environment:
-#      - canal.instance.master.address=mysql:3306
-#      - canal.instance.dbUsername=root
-#      - canal.instance.connectionCharset=UTF-8
-#      - canal.instance.tsdb.enable=true
-#      - canal.instance.gtidon=false
+  openresty:
+    image: openresty/openresty:latest
+    container_name: openresty
+    network_mode: "host"
+    volumes:
+      - /work/changgou/nginx/conf.d:/etc/nginx/conf.d
+# 不知道下面的这个怎么使用，所以先注销掉
+  canal:
+    image: canal/canal-server:latest
+    container_name: canal
+    # restart: always
+    links:
+      - mysql
+    environment:
+      - canal.instance.master.address=mysql:3306
+      - canal.instance.dbUsername=canal
+      - canal.instance.dbPassword=canal
+      - canal.instance.connectionCharset=UTF-8
+      - canal.instance.tsdb.enable=true
+      - canal.instance.gtidon=false
 #      - canal.instance.filter.regex=.*\\..*
-#    ports:
-#      - 11111:11111
+    ports:
+      - 11111:11111
+    volumes:
+      - canal_conf:/home/admin/canal-server
 volumes:
   esdata:
     driver: local
   mysql_data:
     driver: local
-  mysql_config:
+  mysql_conf:
+    driver: local
+  canal_conf:
     driver: local
 networks:
   esnet:

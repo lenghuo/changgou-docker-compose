@@ -1,0 +1,6 @@
+2019/11/12 12:35:17 [error] 6#6: *7 lua entry thread aborted: runtime error: /usr/local/openresty/lualib/resty/mysql.lua:236: attempt to perform arithmetic on field 'packet_no' (a nil value)
+stack traceback:
+coroutine 0:
+	/usr/local/openresty/lualib/resty/mysql.lua: in function '_send_packet'
+	/usr/local/openresty/lualib/resty/mysql.lua:781: in function 'close'
+	/etc/nginx/conf.d/ad_load.lua:20: in main chunk, client: 192.168.99.1, server: localhost, request: "GET /ad_update?position=web_index_lb HTTP/1.1", host: "192.168.99.121:8002"
