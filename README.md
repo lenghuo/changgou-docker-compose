@@ -1,5 +1,5 @@
 # changgou-docker-compose
-用于畅购项目开发的一些 docker 环境
+用于畅购项目开发的一些 docker 环境，由于`canal`的关系，所以要求虚拟机安装`docker`时，虚拟机内存必须在`2G`以上，假如服务器亦是如此
 
 ## Elasticsearch
 
@@ -24,6 +24,9 @@ RabbbitMQ  manager访问端口为 `15672` ，tcp 连接端口为`5672`，使用�
 ## morunchang/fastdfs
 
 按照课程配置即可，测试过，可以上传文件
+
+## canal/canal-server
+`canal` 是阿里云开发的一款开源的数据库同步工具，`canal`在`docker`里建议`docker`宿主机的内存在`2G`以上，不然会出现内存溢出错误。
 
 ## 建议
 
