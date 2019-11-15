@@ -19,7 +19,15 @@
 
 ## RabbitMQ
 
-RabbbitMQ  manager访问端口为 `15672` ，tcp 连接端口为`5672`，使用和课程讲的一样
+RabbbitMQ  manager访问端口为 `15672` ，tcp 连接端口为`5672`，使用和课程讲的一样，管理用户名和密码都是`admin`，在项目中记得添加哦！比如在`springboot`的`application.properties`中添加以下代码：
+```properties
+# rabbitmq 的远程地址
+spring.rabbitmq.host=192.168.99.121
+# rabbitmq 的用户名
+spring.rabbitmq.username=admin
+# rabbitmq 的密码
+spring.rabbitmq.password=admin
+```
 
 ## morunchang/fastdfs
 
